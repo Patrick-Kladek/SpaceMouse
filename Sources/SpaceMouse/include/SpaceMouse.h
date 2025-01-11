@@ -13,10 +13,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class SpaceMouse;
 
+typedef NS_ENUM(NSUInteger, SpaceMouseButton) {
+	SpaceMouseButtonMenu 	= 0b00000001,
+	SpaceMouseButtonFit 	= 0b00000010,
+
+	SpaceMouseButtonTop 	= 0b00000100,
+	SpaceMouseButtonRight	= 0b00010000,
+	SpaceMouseButtonFront 	= 0b00100000,
+};
 
 @protocol SpaceMouseDelegate <NSObject>
 
 - (void)spaceMouse:(SpaceMouse *)mouse didReceiveEvent:(MotionEvent *)event;
+- (void)spaceMouse:(SpaceMouse *)mouse buttonPressed:(SpaceMouseButton)button;
 
 @end
 

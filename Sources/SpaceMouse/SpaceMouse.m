@@ -68,6 +68,13 @@ void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *
 	}
 }
 
+- (void)buttonPressed:(uint32_t)button
+{
+	if ([self.delegate respondsToSelector:@selector(spaceMouse:buttonPressed:)]) {
+		[self.delegate spaceMouse:self buttonPressed:(SpaceMouseButton)button];
+	}
+}
+
 void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *messageArgument)
 {
 	ConnexionDeviceState *state;
@@ -83,8 +90,9 @@ void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *
 						[SpaceMouse.sharedInstance eventReceived:event];
 					}
 						break;
-					case kConnexionCmdHandleButtons:
-						break;
+					case kConnexionCmdHandleButtons: {
+						[SpaceMouse.sharedInstance buttonPressed:state->buttons];
+					}
 					case kConnexionCmdAppSpecific:
 						break;
 					case kConnexionCmdHandleRawData:
