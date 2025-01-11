@@ -1,0 +1,21 @@
+//
+//module ConnexionClient {
+//	header "/Library/Frameworks/3DconnexionClient.framework/Versions/A/Headers/ConnexionClientAPI.h"
+//
+//	export *
+//}
+
+
+module ConnexionClient {
+	header "/Library/Frameworks/3DconnexionClient.framework/Versions/A/Headers/ConnexionClientAPI.h"
+	header "/Library/Frameworks/3DconnexionClient.framework/Versions/A/Headers/ConnexionClient.h"
+	header "/Library/Frameworks/3DconnexionClient.framework/Versions/A/Headers/ConnexionClientCmdExport.h"
+	export *
+}
+
+module SpaceMouse {
+	header "MotionEvent.h"
+	header "SpaceMouse.h"
+
+	export *
+}
