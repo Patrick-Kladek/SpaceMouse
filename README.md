@@ -3,15 +3,16 @@ A Swift Package for interacting with a 3Dconnexion Space Mouse
 
 ## Motivation
 
-I was struggling to use the SpaceMouse SDK in a swift application. I've got it working in objc and decided to create a Swift Package for easy integration into a swift application.
+I was struggling to use the SpaceMouse SDK in a Swift Application. I've got it working in objc and decided to create a Swift Package, so it can be easily used in Swift.
 
 ## Prerequisites
 
 You need to have the 3Dconnexion drivers installed in its default location `/Library/Frameworks/3DconnexionClient.framework`.
+You might also need to disable App Sandbox & Hardend Runtime.
 
 ## Usage
 
-In your AppDelegate connect to mouse
+In your AppDelegate connect the mouse
 
 ```swift
 SpaceMouse.sharedInstance.delegate = self
