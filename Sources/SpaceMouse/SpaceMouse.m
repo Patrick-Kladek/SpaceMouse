@@ -18,6 +18,8 @@ void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *
 
 @interface SpaceMouse ()
 
+@property (atomic) NSThread *connexionThread;
+
 @end
 
 
@@ -48,18 +50,21 @@ void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *
 
 - (void)connect
 {
-	OSErr error;
-
-	// Make sure the framework is installed
-	if (SetConnexionHandlers == NULL) {
-		NSLog(@"SpaceMouse Framework not found");
-	}
-	// Install message handler and register our client
-	error = SetConnexionHandlers(messageUpdateHandler, 0L, 0L, NO);
-
-	// This takes over system-wide
-	_clientID = RegisterConnexionClient(kConnexionClientWildcard, NULL, kConnexionClientModeTakeOver, kConnexionMaskAll);
+	self.connexionThread = [[NSThread alloc] initWithTarget:self selector:@selector(_main) object:nil];
+	self.connexionThread.name = @"Space Mouse";
+	[self.connexionThread start];
 }
+
+- (void)disconnect
+{
+	if (self.clientID) {
+		UnregisterConnexionClient(self.clientID);
+	}
+	CleanupConnexionHandlers();
+	[self.connexionThread cancel];
+}
+
+// MARK: - Internal
 
 - (void)eventReceived:(MotionEvent *)event
 {
@@ -74,6 +79,36 @@ void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *
 		[self.delegate spaceMouse:self buttonPressed:(SpaceMouseButton)button];
 	}
 }
+
+// MARK: - Private
+
+- (void)_start3DMouse
+{
+	OSErr error;
+
+	// Make sure the framework is installed
+	if (SetConnexionHandlers == NULL) {
+		NSLog(@"SpaceMouse Framework not found");
+	}
+	// Install message handler and register our client
+	error = SetConnexionHandlers(messageUpdateHandler, 0L, 0L, NO);
+
+	// This takes over system-wide
+	_clientID = RegisterConnexionClient(kConnexionClientWildcard, NULL, kConnexionClientModeTakeOver, kConnexionMaskAll);
+}
+
+- (void)_main
+{
+	NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+
+	[self _start3DMouse];
+	while ([[NSThread currentThread] isCancelled] == NO) {
+	  // Run the run loop but timeout immediately if the input source isn't waiting to fire.
+	  [runLoop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+	}
+}
+
+@end
 
 void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *messageArgument)
 {
@@ -109,5 +144,3 @@ void messageUpdateHandler(io_connect_t connection, natural_t messageType, void *
 			break;
 	}
 }
-
-@end

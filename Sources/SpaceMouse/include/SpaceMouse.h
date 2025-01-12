@@ -39,6 +39,7 @@ typedef NS_ENUM(NSUInteger, SpaceMouseButton) {
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)connect;
+- (void)disconnect;
 
 @end
 
