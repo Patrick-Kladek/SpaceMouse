@@ -1,6 +1,6 @@
 //
 //  MotionEvent.h
-//  MetallSplatter
+//  SpaceMouse
 //
 //  Created by Patrick Kladek on 11.01.25.
 //
